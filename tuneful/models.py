@@ -7,8 +7,7 @@ Base = declarative_base()
 class Song(Base):
     __tablename__ = "songs"
 
-    id = Column(Integer, primary_key=True)
-    
+    id = Column(Integer, primary_key=True)    
     file = relationship("File", uselist = False, backref = "file")
 
     def as_dictionary(self):
@@ -23,9 +22,8 @@ class File(Base):
     __tablename__ = "files"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(1024))
-    
-    song = Column(Integer, ForeignKey('songs.id'), nullable = False)
+    name = Column(String(1024))    
+    song_id = Column(Integer, ForeignKey("songs.id"), nullable = False)
 
     def as_dictionary(self):
         file = { "file": {"id": self.id, "name": self.name} }

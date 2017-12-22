@@ -14,14 +14,14 @@ from .utils import upload_path
 @app.route("/api/songs", methods=["GET"])
 @decorators.accept("application/json")
 def get_songs():
-	""" Get a list of songs """
+    """ Get a list of songs """
 
-	# Get songs from the database
-	songs = session.query(models.Song).order_by(models.Song.id).all()
+    # Get songs from the database
+    songs = session.query(models.Song).order_by(models.Song.id).all()
 
-	# Convert the songs list to JSON and return a response
-	data = json.dumps([song.as_dictionary() for song in songs])
-	return Response(data, 200, mimetype="application/json")
+    # Convert the songs list to JSON and return a response
+    data = json.dumps([song.as_dictionary() for song in songs])
+    return Response(data, 200, mimetype="application/json")
 
 @app.route("/api/songs", methods=["POST"])
 @decorators.require("application/json")
@@ -38,7 +38,7 @@ def post_songs():
 	#Verify received JSON
 	if validate(new_song, valid_format):
 		if song_id == file_id:
-			new_song = models.Songs(id=song_id,file=file_id)
+			new_song = models.Song(id=song_id,file=file_id)
 			session.add(new_song)
 			session.commit()
 
