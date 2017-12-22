@@ -11,5 +11,6 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 # Create your models here
+from . models import Song, File
 
 Base.metadata.create_all(engine)

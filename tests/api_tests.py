@@ -37,4 +37,22 @@ class TestAPI(unittest.TestCase):
         # Delete test upload folder
         shutil.rmtree(upload_path())
 
+    def post_songs(self):
+        """ Post songs Test """
+        test_song = {"file": {"id": 9}}
 
+        new_song = models.Song(test_song)
+
+        session.add(test_song)
+        session.commit()
+
+        response = self.client.post("/api/songs")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "application/json")
+
+        data = json.loads(response.data.decode("ascii"))
+        self.assertEqual(len(data), 2)
+
+if __name__ == "__main__":
+    unittest.main()
