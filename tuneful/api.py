@@ -17,10 +17,10 @@ def get_songs():
 	""" Get a list of songs """
 
 	# Get songs from the database
-	songs = session.query(models.Songs).order_by(models.Songs.id)
+	songs = session.query(models.Song).order_by(models.Song.id).all()
 
 	# Convert the songs list to JSON and return a response
-	data = json.dumps([song.as_dictionary()])
+	data = json.dumps([song.as_dictionary() for song in songs])
 	return Response(data, 200, mimetype="application/json")
 
 @app.route("/api/songs", methods=["POST"])
