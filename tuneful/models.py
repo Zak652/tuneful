@@ -1,19 +1,23 @@
-from sqlalchemy import Column, Integer, String, Sequence, ForeignKey
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
+import os.path
 
-Base = declarative_base()
+from sqlalchemy import Column, Integer, String, Sequence, ForeignKey
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.ext.declarative import declarative_base
+from flask import url_for
+from . import app
+from .database import Base, engine
+
 
 class Song(Base):
     __tablename__ = "songs"
 
     id = Column(Integer, primary_key=True)    
-    file = relationship("File", uselist = False, backref = "file")
+    song_file = Column(Integer, ForeignKey("files.id"), nullable = False)
 
     def as_dictionary(self):
         song = {"id": self.id,
-                "file": {"id": file.id, "name": file.name}
-        }
+                "file": {"id": self.file.id, "name": self.file.name}
+                }
 
         return song
 
@@ -21,11 +25,14 @@ class Song(Base):
 class File(Base):
     __tablename__ = "files"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key = True)
     name = Column(String(1024))    
-    song_id = Column(Integer, ForeignKey("songs.id"), nullable = False)
+    song_id = relationship("Song", uselist = False, backref = "file")
 
     def as_dictionary(self):
-        file = { "file": {"id": self.id, "name": self.name} }
-        return file
+        file = {"id": self.id,
+                "name": self.name,
+                "path": url_for("uploaded_file", filename = self.name)
+        }
 
+        return file
